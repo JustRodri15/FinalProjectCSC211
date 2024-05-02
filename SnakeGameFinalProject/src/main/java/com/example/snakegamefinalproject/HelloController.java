@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.scene.control.Label;
 import javafx.scene.control.skin.TextInputControlSkin.Direction;
 
 public class HelloController implements Initializable {
@@ -52,7 +51,7 @@ public class HelloController implements Initializable {
     @FXML
     private AnchorPane anchorPane;
     @FXML
-    private Button startButton;
+    public Button startButton;
 
     Timeline timeline;
 
@@ -155,7 +154,7 @@ public class HelloController implements Initializable {
 
     //New snake tail is created and added to the snake and the anchor pane
     private void addSnakeTail() {
-        Rectangle rectangle = snakeBody.get(snakeBody.size() - 1);
+        Rectangle rectangle = snakeBody.getLast();
         Rectangle snakeTail = new Rectangle(
                 snakeBody.get(1).getX() + xPos + snakeSize,
                 snakeBody.get(1).getY() + yPos,
@@ -168,9 +167,9 @@ public class HelloController implements Initializable {
         if (xPos > 300 || xPos < -250 ||yPos < -250 || yPos > 300) {
             System.out.println("Game_over");
             return true;
-        } else if(snakeHitItSelf()){
+        }  if(snakeHitItSelf()){
             return true;
-        }
+        }else
         return false;
     }
 
@@ -197,10 +196,9 @@ public class HelloController implements Initializable {
     }
 
     private void foodCantSpawnInsideSnake(){
-        food.moveFood();
-        while (isFoodInsideSnake()){
+        do {
             food.moveFood();
-        }
+        } while (isFoodInsideSnake());
 
 
     }
