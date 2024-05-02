@@ -27,8 +27,6 @@ public class HelloController implements Initializable {
     private final Double snakeSize = 50.0;
     //The head of the snake is created, at position (250,250)
     private Rectangle snakeHead;
-    //First snake tail created behind the head of the snake
-    private Rectangle snakeTail_1;
     //x and y position of the snake head different from starting position
     double xPos;
     double yPos;
@@ -68,7 +66,8 @@ public class HelloController implements Initializable {
         positions.clear();
         snakeBody.clear();
         snakeHead = new Rectangle(250, 250, snakeSize, snakeSize);
-        snakeTail_1 = new Rectangle(snakeHead.getX() - snakeSize, snakeHead.getY(), snakeSize, snakeSize);
+        //First snake tail created behind the head of the snake
+        Rectangle snakeTail = new Rectangle(snakeHead.getX() - snakeSize, snakeHead.getY(), snakeSize, snakeSize);
         xPos = snakeHead.getLayoutX();
         yPos = snakeHead.getLayoutY();
         direction = Direction.RIGHT;
@@ -76,15 +75,18 @@ public class HelloController implements Initializable {
         food.moveFood();
 
         snakeBody.add(snakeHead);
-        snakeHead.setFill(Color.RED);
+        snakeHead.setFill(Color.GREEN);
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
-        snakeBody.add(snakeTail_1);
+        snakeBody.add(snakeTail);
 
-        anchorPane.getChildren().addAll(snakeHead, snakeTail_1);
+        anchorPane.getChildren().addAll(snakeHead, snakeTail);
     }
 
+//This allows the animation of the snake to move as a timeline allows keyframes to be processed allowing the snake
+//to move. Every 0.2 seconds the loop below allows the movement of the snake by getting the position of the head
+//and body moving it one direction it's moving which can be up, down, left, right.
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.2), e -> {
@@ -121,7 +123,7 @@ public class HelloController implements Initializable {
         }
     }
 
-    //Create another snake body part
+    //Create another snake body part, used for increasing body part when eating food.
     @FXML
     void addBodyPart(ActionEvent event) {
         addSnakeTail();
@@ -144,7 +146,7 @@ public class HelloController implements Initializable {
         }
     }
 
-    //A specific tail is moved to the position of the head x game ticks after the head was there
+    //The tail moves towards the position of the head depending on the amount of previous  game ticks
     private void moveSnakeTail(Rectangle snakeTail, int tailNumber) {
         double yPos = positions.get(gameTicks - tailNumber + 1).getYPos() - snakeTail.getY();
         double xPos = positions.get(gameTicks - tailNumber + 1).getXPos() - snakeTail.getX();
@@ -163,16 +165,17 @@ public class HelloController implements Initializable {
         anchorPane.getChildren().add(snakeTail);
     }
 
+    //checks if the snake is out of the boundaries
     public boolean checkIfGameIsOver(Rectangle snakeHead) {
         if (xPos > 300 || xPos < -250 ||yPos < -250 || yPos > 300) {
             System.out.println("Game_over");
             return true;
-        }  if(snakeHitItSelf()){
-            return true;
-        }else
-        return false;
+        }
+        return snakeHitItSelf();
     }
 
+    //checks if the head of the snake was in the same position previously and changes depending on the size
+    //of the tail, if the tail is 7 long, it checks if the snake was in the previous 7 game ticks.
     public boolean snakeHitItSelf(){
         int size = positions.size() - 1;
         if(size > 2){
@@ -187,6 +190,7 @@ public class HelloController implements Initializable {
         return false;
     }
 
+    //checks if snake eats food, if the position of the head is within the food, it increases by 1 and generated a new food.
     private void eatFood(){
         if(xPos + snakeHead.getX() == food.getPosition().getXPos() && yPos + snakeHead.getY() == food.getPosition().getYPos()){
             System.out.println("Eat food");
@@ -195,6 +199,7 @@ public class HelloController implements Initializable {
         }
     }
 
+    //checks if food is inside snake and prevents it from generating where any snake body part is
     private void foodCantSpawnInsideSnake(){
         do {
             food.moveFood();
@@ -203,6 +208,7 @@ public class HelloController implements Initializable {
 
     }
 
+    //Generated where food will be randomly, if food is inside snake it changes position, if not it stays there.
     private boolean isFoodInsideSnake(){
         int size = positions.size();
         if(size > 2){

@@ -8,18 +8,16 @@ import java.util.Random;
 
 public class Food {
     private final Position position;
-    private Rectangle rectangle;
-    private Color color = Color.GREEN;
-    private AnchorPane pane;
+    private final Rectangle rectangle;
     private final Random random = new Random();
     private final int size;
 
 
     public Food(double xPos, double yPos, AnchorPane pane, double size) {
-        this.pane = pane;
         this.size = (int) size;
         position = new Position(xPos,yPos);
         rectangle = new Rectangle(position.getXPos(),position.getYPos(),size,size);
+        Color color = Color.BLUE;
         rectangle.setFill(color);
         pane.getChildren().add(rectangle);
     }
@@ -32,6 +30,7 @@ public class Food {
         getRandomSpotForFood();
     }
 
+    //Moves the food to a random position on the screen,
     public void getRandomSpotForFood(){
         int positionX = random.nextInt(12);
         int positionY = random.nextInt(12);
