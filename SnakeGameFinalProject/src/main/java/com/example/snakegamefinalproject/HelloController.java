@@ -37,7 +37,7 @@ public class HelloController implements Initializable {
     //Direction snake is moving at start
     private Direction direction;
 
-    //List of all position of thew snake head
+    //List of all position of the snake head
     private final List<Position> positions = new ArrayList<>();
 
     //List of all snake body parts
@@ -86,7 +86,8 @@ public class HelloController implements Initializable {
 
 //This allows the animation of the snake to move as a timeline allows keyframes to be processed allowing the snake
 //to move. Every 0.2 seconds the loop below allows the movement of the snake by getting the position of the head
-//and body moving it one direction it's moving which can be up, down, left, right.
+//and body moving it one direction it's moving which can be up, down, left, right. Timelines work with keyframes
+//to create the animation of the parts of the snake to move sequentially at a specified time interval.
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.2), e -> {
@@ -154,7 +155,7 @@ public class HelloController implements Initializable {
         snakeTail.setTranslateY(yPos);
     }
 
-    //New snake tail is created and added to the snake and the anchor pane
+    //New snake tail is created and added to the snake and the anchor pane during the start of the game
     private void addSnakeTail() {
         Rectangle rectangle = snakeBody.getLast();
         Rectangle snakeTail = new Rectangle(
